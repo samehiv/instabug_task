@@ -23,6 +23,8 @@ RSpec.describe Message, type: :model do
     subject { build :message }
     it { should validate_presence_of(:number) }
 
+    it { should validate_presence_of(:body) }
+
     it do 
       should validate_uniqueness_of(:number).scoped_to(:chat_id)
     end

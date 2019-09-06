@@ -108,7 +108,7 @@ RSpec.describe 'V1::Applications', type: :request do
     before { delete v1_application_path(application.token), headers: { accept: :json } }
 
     it 'delete application from database' do
-      expect{ Application.find(application.token) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect{ Application.find_by!(token: application.token) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'return code 200' do

@@ -53,4 +53,23 @@ RSpec.describe 'Chats', type: :request do
       expect(CreateChatJob).to have_been_enqueued
     end
   end
+
+  describe 'DELETE /application/:token/chats/:number' do
+    let(:chat) do
+      create(:chat)
+    end
+    before do 
+      clear_enqueued_jobs
+      delete v1_application_chat_path(chat.application.token, chat.number), headers: { accept: :json }
+    end
+
+    it 'return code 200' do
+      expect(json_response[:code]).to eq(200)
+    end
+
+    it 'it queue destroy chat job for runing later' do
+      expect(DestroyChatJob).to have_been_enqueued
+    end
+
+  end
 end

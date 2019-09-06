@@ -18,6 +18,7 @@
 
 FactoryBot.define do
   factory :message do
+    sequence(:number) { |n| n }
     body { Faker::Movie.quote }
     chat
   end

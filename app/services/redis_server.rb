@@ -13,8 +13,12 @@ class RedisServer
     @redis = Redis.new(host: REDIS_HOST, password: REDIS_PASSWORD)
   end
 
-  def next_chat_number(application_id)
-    @redis.incr("application_#{application_id}_chat_number")
+  def next_chat_number(application)
+    @redis.incr("application_#{application.id}_chat_number")
+  end
+
+  def next_message_number(chat)
+    @redis.incr("chat_#{chat.application_id}_#{chat.id}_message_number")
   end
 
 
