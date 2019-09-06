@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 RSpec.describe 'Chats', type: :request do
   describe 'GET /application/:token/chats' do
     before do
@@ -18,8 +17,24 @@ RSpec.describe 'Chats', type: :request do
     end
   end
 
+  describe 'GET /application/:token/chats/:number' do
+    let(:chat){ create :chat }
+    before do
+      get v1_application_chat_path(chat.application.token, chat.number),
+          params: { page: 1, per_page: 5 }, headers: { accept: :json }
+    end
+
+    it 'return code 200' do
+      expect(json_response[:code]).to eq(200)
+    end
+
+    it 'return chat' do
+      expect(json_response[:data][:number]).to eq(chat.number)
+    end
+
+  end
+
   describe 'POST /application/:token/chats' do
-    
     let(:application) { create :application }
     before do
       clear_enqueued_jobs
@@ -37,8 +52,5 @@ RSpec.describe 'Chats', type: :request do
     it 'it queue create chat job for runing later' do
       expect(CreateChatJob).to have_been_enqueued
     end
-
   end
-
-
 end
