@@ -2,9 +2,9 @@
 #
 # Table name: chats
 #
-#  id             :bigint           not null
+#  id             :bigint           not null, primary key
 #  messages_count :integer          default(0)
-#  number         :integer          primary key
+#  number         :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  application_id :bigint
@@ -22,6 +22,7 @@ class Chat < ApplicationRecord
   validates :number, uniqueness: { scope: :application_id }
 
   belongs_to :application
+  has_many :messages, dependent: :destroy
 
   default_scope { order(:number) }
 end

@@ -2,10 +2,10 @@
 #
 # Table name: applications
 #
-#  id          :bigint           not null
+#  id          :bigint           not null, primary key
 #  chats_count :integer          default(0)
 #  name        :string(255)
-#  token       :string(255)      primary key
+#  token       :string(255)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #

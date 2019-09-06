@@ -2,9 +2,9 @@
 #
 # Table name: chats
 #
-#  id             :bigint           not null
+#  id             :bigint           not null, primary key
 #  messages_count :integer          default(0)
-#  number         :integer          primary key
+#  number         :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  application_id :bigint
@@ -30,6 +30,9 @@ RSpec.describe Chat, type: :model do
 
   context 'associations' do
     it { should belong_to(:application) }
+
+    it { should have_many(:messages).dependent(:destroy) }
+
   end
 
 
