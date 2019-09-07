@@ -11,17 +11,14 @@ module V1
     def show; end
 
     def create
-      message_number = RedisServer.next_message_number(@chat)
-      CreateChatJob.perform_later(@application, chat_number)
+      body = params.require(:body)
+      number = RedisServer.next_message_number(@chat)
+      CreateMessageJob.perform_later(@chat, number, body)
 
-      render_json(200, data: { message_number: message_number })
+      render_json(200, data: { message_number: number })
     end
 
     private
-
-    def message_params
-      params.permit(:body)
-    end
 
     def set_message
       @message = @chat.messages.find_by!(number: params[:number])

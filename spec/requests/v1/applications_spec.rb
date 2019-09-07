@@ -56,7 +56,7 @@ RSpec.describe 'V1::Applications', type: :request do
     end
 
     context 'when reuqest is send without name params' do
-      before { post v1_applications_path }
+      before { post v1_applications_path, headers: { accept: :json } }
 
       it 'return code 422' do
         expect(json_response[:code]).to eq(422)

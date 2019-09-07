@@ -11,10 +11,10 @@ module V1
     def show; end
 
     def create
-      chat_number = RedisServer.next_chat_number(@application)
-      CreateChatJob.perform_later(@application, chat_number)
+      number = RedisServer.next_chat_number(@application)
+      CreateChatJob.perform_later(@application, number)
 
-      render_json(200, data: { chat_number: chat_number })
+      render_json(200, data: { chat_number: number })
     end
 
     def destroy

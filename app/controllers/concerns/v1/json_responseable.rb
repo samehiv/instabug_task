@@ -5,18 +5,9 @@ module V1
     included do
       helper_method :render_response
 
-      rescue_from StandardError do |e|
-        bc = ActiveSupport::BacktraceCleaner.new
-        bc.add_filter   { |line| line.gsub(Rails.root.to_s, '') }
-        bc.add_silencer { |line| line =~ /puma|rubygems|gems/ } 
-        render_json 500, error: e.message, errors: bc.clean(e.backtrace)
-      end
-
-      rescue_from ActiveRecord::RecordInvalid do |e|
-        errors = e.record.errors.full_messages
-
-        render_json 422, error: 'Validation failed', errors: errors
-      end
+      rescue_from StandardError, with: :server_error_response
+      rescue_from ActiveRecord::RecordInvalid, with: :validation_error_response
+      rescue_from ActionController::ParameterMissing, with: :parameter_missing_error_response
     end
 
     def render_response(json, code, message = '')
@@ -47,6 +38,24 @@ module V1
 
     def status_code(code)
       code.is_a?(Symbol) ? Rack::Utils::SYMBOL_TO_STATUS_CODE[code] : code
+    end
+
+    private
+
+    def validation_error_response(exception)
+      errors = exception.record.errors.full_messages
+      render_json 422, error: 'Validation failed', errors: errors
+    end
+
+    def parameter_missing_error_response(exception)
+      render_json 422, error: 'Validation failed', errors: exception.message
+    end
+
+    def server_error_response(_exception)
+      bc = ActiveSupport::BacktraceCleaner.new
+      bc.add_filter   { |line| line.gsub(Rails.root.to_s, '') }
+      bc.add_silencer { |line| line =~ /puma|rubygems|gems/ }
+      render_json 500, error: e.message, errors: bc.clean(e.backtrace)
     end
   end
 end
