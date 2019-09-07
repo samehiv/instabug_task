@@ -8,6 +8,7 @@ module V1
       rescue_from StandardError, with: :server_error_response
       rescue_from ActiveRecord::RecordInvalid, with: :validation_error_response
       rescue_from ActionController::ParameterMissing, with: :parameter_missing_error_response
+      rescue_from ActiveRecord::RecordNotFound, with: :record_not_found_error_response
     end
 
     def render_response(json, code, message = '')
@@ -49,6 +50,10 @@ module V1
 
     def parameter_missing_error_response(exception)
       render_json 422, error: 'Validation failed', errors: exception.message
+    end
+
+    def record_not_found_error_response(exception)
+      render_json 404, error: exception.message
     end
 
     def server_error_response(exception)
