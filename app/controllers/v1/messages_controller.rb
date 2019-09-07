@@ -24,7 +24,7 @@ module V1
     end
 
     def set_message
-      @message = @chats.messages.find_by!(number: params[:number])
+      @message = @chat.messages.find_by!(number: params[:number])
     end
     
     def set_chat

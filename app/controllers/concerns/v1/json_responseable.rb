@@ -6,7 +6,10 @@ module V1
       helper_method :render_response
 
       rescue_from StandardError do |e|
-        render_json 400, error: e.message
+        bc = ActiveSupport::BacktraceCleaner.new
+        bc.add_filter   { |line| line.gsub(Rails.root.to_s, '') }
+        bc.add_silencer { |line| line =~ /puma|rubygems|gems/ } 
+        render_json 500, error: e.message, errors: bc.clean(e.backtrace)
       end
 
       rescue_from ActiveRecord::RecordInvalid do |e|
