@@ -53,7 +53,7 @@ RSpec.describe 'V1::Messages', type: :request do
         expect(json_response[:data][:message_number].present?).to eq(true)
       end
 
-      it 'it queue create chat job for runing later' do
+      it 'it queue create message job for runing later' do
         expect(CreateMessageJob).to have_been_enqueued
       end
     end
@@ -71,7 +71,41 @@ RSpec.describe 'V1::Messages', type: :request do
         expect(json_response[:errors][0]).not_to be_empty
       end
     end
+  end
 
+  describe 'PATCH /application/:token/chats/:number/messages/:number' do
+    let(:message) { create :message }
+    let(:valid_params) { { body: 'message body' } }
 
+    context 'when request is valid' do
+      before do
+        clear_enqueued_jobs
+        patch v1_application_chat_message_path(message.chat.application.token, message.chat.number, message.number),
+             params: valid_params, headers: { accept: :json }
+      end
+
+      it 'return code 200' do
+        expect(json_response[:code]).to eq(200)
+      end
+
+      it 'it queue update message job for runing later' do
+        expect(UpdateMessageJob).to have_been_enqueued
+      end
+    end
+
+    context 'when without message body' do
+      before do
+        patch v1_application_chat_message_path(message.chat.application.token, message.chat.number, message.number),
+             headers: { accept: :json }
+      end
+
+      it 'return code 422' do
+        expect(json_response[:code]).to eq(422)
+      end
+
+      it 'return validation error message' do
+        expect(json_response[:errors][0]).not_to be_empty
+      end
+    end
   end
 end
