@@ -29,6 +29,8 @@ gem 'jbuilder', '~> 2.9', '>= 2.9.1'
 gem 'redis', '~> 4.1', '>= 4.1.2'
 gem 'sidekiq', '~> 6.0'
 gem 'kaminari', '~> 1.1', '>= 1.1.1'
+gem 'elasticsearch-model', '~> 7.0'
+gem 'elasticsearch-rails', '~> 7.0'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'

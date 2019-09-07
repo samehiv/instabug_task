@@ -17,10 +17,28 @@
 #
 
 class Message < ApplicationRecord
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
+
+  def self.search_query(chat, keyword)
+    {
+      query: {
+        bool: {
+          must: [{ term: { chat_id: chat.id } }, { match: { body: keyword } }]
+        }
+      },
+      sort: [{ number: { order: :asc } }]
+    }
+  end
+
   validates :number, :body, presence: true
   validates :number, uniqueness: { scope: :chat_id }
 
   belongs_to :chat
 
   default_scope { order(:number) }
+
+  def as_indexed_json(_options = {})
+    as_json(only: %w[body chat_id number])
+  end
 end

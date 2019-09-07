@@ -5,7 +5,12 @@ module V1
     before_action :set_message, only: %i[show update destroy]
 
     def index
-      @data = Pagination.serialize(@chat.messages, params[:page], params[:per_page])
+      messages = if params[:keyword].present?
+                   Message.search(Message.search_query(@chat, params[:keyword]))
+                 else
+                   @chat.messages
+                 end
+      @data = Pagination.serialize(messages, params[:page], params[:per_page])
     end
 
     def show; end
@@ -36,7 +41,7 @@ module V1
     def set_message
       @message = @chat.messages.find_by!(number: params[:number])
     end
-    
+
     def set_chat
       @chat = @application.chats.find_by!(number: params[:chat_number])
     end
@@ -44,8 +49,5 @@ module V1
     def set_application
       @application = Application.find_by!(token: params[:application_token])
     end
-
-    
-    
   end
 end

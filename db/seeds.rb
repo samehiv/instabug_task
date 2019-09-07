@@ -6,9 +6,10 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+Message.destroy_all
 Application.delete_all
 Chat.delete_all
-Message.delete_all
+
 
 FactoryBot.create_list :application, 10
 FactoryBot.create_list :chat, 10, application: Application.first

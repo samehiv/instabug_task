@@ -37,5 +37,10 @@ module InstabugTask
     end
 
     config.active_job.queue_adapter = :sidekiq
+
+    config.after_initialize do
+      Elasticsearch::Model.client = Elasticsearch::Client.new(
+        host: Rails.application.credentials[Rails.env.to_sym][:elasticsearch_host])
+    end
   end
 end
