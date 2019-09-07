@@ -51,11 +51,11 @@ module V1
       render_json 422, error: 'Validation failed', errors: exception.message
     end
 
-    def server_error_response(_exception)
+    def server_error_response(exception)
       bc = ActiveSupport::BacktraceCleaner.new
       bc.add_filter   { |line| line.gsub(Rails.root.to_s, '') }
       bc.add_silencer { |line| line =~ /puma|rubygems|gems/ }
-      render_json 500, error: e.message, errors: bc.clean(e.backtrace)
+      render_json 500, error: exception.message, errors: bc.clean(exception.backtrace)
     end
   end
 end
