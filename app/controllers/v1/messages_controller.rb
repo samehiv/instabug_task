@@ -2,7 +2,7 @@ module V1
   class MessagesController < ApiController
     before_action :set_application
     before_action :set_chat
-    before_action :set_message, only: %i[show update]
+    before_action :set_message, only: %i[show update destroy]
 
     def index
       @data = Pagination.serialize(@chat.messages, params[:page], params[:per_page])
@@ -21,6 +21,12 @@ module V1
     def update
       body = params.require(:body)
       UpdateMessageJob.perform_later(@message, body)
+
+      render_json(200)
+    end
+
+    def destroy
+      DestroyMessageJob.perform_later(@message)
 
       render_json(200)
     end

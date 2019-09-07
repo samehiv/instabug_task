@@ -72,4 +72,6 @@ RSpec.describe 'Chats', type: :request do
     end
 
   end
+
+  
 end

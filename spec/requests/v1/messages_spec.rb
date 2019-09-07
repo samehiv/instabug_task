@@ -108,4 +108,28 @@ RSpec.describe 'V1::Messages', type: :request do
       end
     end
   end
+
+  describe 'DELETE /application/:token/chats/:number/message/:number' do
+    let(:message) do
+      create(:message)
+    end
+    before do 
+      clear_enqueued_jobs
+      delete v1_application_chat_message_path(message.chat.application.token, message.chat.number, message.number),
+             headers: { accept: :json }
+    end
+
+    it 'return code 200' do
+      expect(json_response[:code]).to eq(200)
+    end
+
+    it 'it queue destroy message job for runing later' do
+      expect(DestroyMessageJob).to have_been_enqueued
+    end
+
+  end
+
+
+
+
 end
