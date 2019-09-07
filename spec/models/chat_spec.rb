@@ -29,7 +29,7 @@ RSpec.describe Chat, type: :model do
   end
 
   context 'associations' do
-    it { should belong_to(:application) }
+    it { should belong_to(:application).counter_cache(true) }
 
     it { should have_many(:messages).dependent(:destroy) }
 

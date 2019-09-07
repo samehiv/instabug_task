@@ -21,7 +21,7 @@ class Chat < ApplicationRecord
   validates :number, presence: true
   validates :number, uniqueness: { scope: :application_id }
 
-  belongs_to :application
+  belongs_to :application, counter_cache: true
   has_many :messages, dependent: :destroy
 
   default_scope { order(:number) }

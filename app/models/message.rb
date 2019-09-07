@@ -34,7 +34,7 @@ class Message < ApplicationRecord
   validates :number, :body, presence: true
   validates :number, uniqueness: { scope: :chat_id }
 
-  belongs_to :chat
+  belongs_to :chat, counter_cache: true
 
   default_scope { order(:number) }
 

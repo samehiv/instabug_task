@@ -31,6 +31,6 @@ RSpec.describe Message, type: :model do
   end
 
   context 'associations' do
-    it { should belong_to(:chat) }
+    it { should belong_to(:chat).counter_cache(true) }
   end
 end
