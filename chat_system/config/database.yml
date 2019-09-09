@@ -16,6 +16,7 @@ default: &default
   username: root
   password: root
   socket: /tmp/mysql.sock
+  host: db
 
 development:
   <<: *default
@@ -49,7 +50,6 @@ test:
 #
 production:
   <<: *default
-  host: db
   database: instabug_task_production
-  username: instabug_task
+  username: root
   password: <%= ENV['DATABASE_PASSWORD'] %>

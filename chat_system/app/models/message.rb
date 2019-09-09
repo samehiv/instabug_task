@@ -18,7 +18,7 @@
 
 class Message < ApplicationRecord
   include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
+  include Elasticsearch::Model::Callbacks unless Rails.env.test?
 
   def self.search_query(chat, keyword)
     {

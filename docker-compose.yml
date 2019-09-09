@@ -1,0 +1,52 @@
+version: '3.7'
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+  redis:
+    image: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
+    environment:
+      - cluster.name=development-cluster
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+  web:
+    build: .
+    command:
+      - bash
+      - -c
+      - |
+        /wait-for-it/wait-for-it.sh db:3306 -t 0 --strict -- rails db:create
+        /wait-for-it/wait-for-it.sh db:3306 -t 0 --strict -- rails db:migrate
+        /wait-for-it/wait-for-it.sh elastic:9200 db:3306 -t 0 --strict -- rails search:add_index[Message]
+        rm -f tmp/pids/server.pid
+        bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - ./chat_system:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+      - elastic
+  sidekiq:
+    build: .
+    volumes:
+      - ./chat_system:/app
+    command: bash -c "bundle exec sidekiq"
+    depends_on:
+      - db
+      - redis
+      
