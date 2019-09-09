@@ -1,6 +1,6 @@
 # To Run the Code
 
-* make sure of 3000 port in your device is free and docker runing.
+* make sure of port 3000 is free and docker is runing.
 
 * git clone the repo or download it
 
@@ -9,4 +9,4 @@
 * check http://localhost:3000 when it's runing you can use the application through the following postman:
 https://documenter.getpostman.com/view/769126/SVmpWh5y?version=latest
 
-* for test runing run "docker-compose run web rspec"
+* for specs runing run "docker-compose run web rspec"
