@@ -9,6 +9,6 @@
 * check http://localhost:3000 when it's runing you can use the application through the following postman:
 https://documenter.getpostman.com/view/769126/SVmpWh5y?version=latest
 
-* make sure that base_url in in postman set to http://localhost:3000/v1
+* make sure that base_url in postman set to http://localhost:3000/v1
 
 * for specs runing run "docker-compose run web rspec"
