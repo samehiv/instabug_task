@@ -4,9 +4,11 @@ namespace :search do
     model = args.model.constantize
     model.__elasticsearch__.create_index!
     model.import
+    puts "elasticsearch connection done successfully and #{args.model} index created"
   rescue StandardError => e
-    puts e.message + ' automatic retry in 15 sec'
-    sleep(15)
+    puts e.message + ' automatic retry in 10 sec'
+    sleep(10)
     retry
   end
+  
 end
