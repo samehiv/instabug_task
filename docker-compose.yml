@@ -30,7 +30,7 @@ services:
       - |
         /wait-for-it/wait-for-it.sh db:3306 -t 0 --strict -- rails db:create
         /wait-for-it/wait-for-it.sh db:3306 -t 0 --strict -- rails db:migrate
-        /wait-for-it/wait-for-it.sh elastic:9200 db:3306 -t 0 --strict -- rails search:add_index[Message]
+        /wait-for-it/wait-for-it.sh elastic:9200 -t 0 --strict -- rails search:add_index[Message]
         rm -f tmp/pids/server.pid
         bundle exec rails s -p 3000 -b '0.0.0.0'
     volumes:
